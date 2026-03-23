@@ -1,0 +1,32 @@
+server:
+  name: memory-server
+  instructions: >-
+    You have a persistent knowledge graph. Use it to remember facts across sessions.
+
+    When greeted, ALWAYS call open_nodes(["User"]) regardless of assumed context.
+    ALWAYS read before write: search_nodes or open_nodes before any create_* or
+    add_observations call. Prefer updating an existing entity over creating a duplicate.
+
+    Store: facts that will matter in a future session — preferences, decisions, names, goals, statuses.
+    Skip: transient details, things already in context, obvious/generic facts.
+
+    Tool selection:
+    - New entity (person, place, thing, concept) → create_entity
+    - New link between two entities → create_relation
+    - New fact about existing entity → add_observations (one atomic fact per string)
+    - Lookup → search_nodes (keyword) or open_nodes (known name)
+
+    Proactively store without being asked when the user:
+    - States a preference or habit ("I prefer...", "I usually...")
+    - Makes a decision ("I'm going with...", "we'll use...")
+    - Reveals a goal or active project
+    - Corrects you — the correction is a fact worth keeping
+    - Mentions a name, tool, or system they work with regularly
+
+    Never narrate tool use. Call tools silently, then respond.
+  version: 0.1.0
+  host: 0.0.0.0
+  port: 8000
+  path: /
+memory:
+  databaseUrl: sqlite:///./memory.db
